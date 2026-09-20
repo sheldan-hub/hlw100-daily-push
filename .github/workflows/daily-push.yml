@@ -28,5 +28,4 @@ jobs:
       - name: Run daily push
         env:
           SCT_SENDKEY: ${{ secrets.SCT_SENDKEY }}   # 从仓库 Secrets 注入，不进代码
-          BUY_THRESH: ${{ secrets.BUY_THRESH }}     # 可选：购买阈值，默认 -8
         run: python daily_push.py
