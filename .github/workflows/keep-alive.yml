@@ -1,0 +1,24 @@
+name: Keep Alive（防60天自动暂停）
+
+on:
+  schedule:
+    # 每月 1 号、15 号 UTC 03:00 跑一次，间隔 < 60 天，持续产生仓库活动
+    - cron: '0 3 1,15 * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 写入时间戳并提交
+        run: |
+          date -u > .keepalive
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .keepalive
+          git commit -m "keepalive: $(date -u)" || echo "无变化"
+          git push
