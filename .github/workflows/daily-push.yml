@@ -1,0 +1,32 @@
+name: 红利低波100 每日偏离度推送
+
+on:
+  schedule:
+    # UTC 12:00 = 北京时间 20:00（A股收盘后，确保当日数据完整）
+    # 注：GitHub Actions 的 cron 使用 UTC，且可能延后数分钟触发，属正常
+    - cron: '0 12 * * *'
+  workflow_dispatch: {}   # 允许在 Actions 页面手动触发，便于测试
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run daily push
+        env:
+          SCT_SENDKEY: ${{ secrets.SCT_SENDKEY }}   # 从仓库 Secrets 注入，不进代码
+          BUY_THRESH: ${{ secrets.BUY_THRESH }}     # 可选：购买阈值，默认 -8
+        run: python daily_push.py
