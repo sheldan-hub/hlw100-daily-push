@@ -4,7 +4,7 @@ on:
   schedule:
     # UTC 12:00 = 北京时间 20:00（A股收盘后，确保当日数据完整）
     # 注：GitHub Actions 的 cron 使用 UTC，且可能延后数分钟触发，属正常
-    - cron: '0 12 * * *'
+    - cron: '0 19 * * *'
   workflow_dispatch: {}   # 允许在 Actions 页面手动触发，便于测试
 
 jobs:
